@@ -6,6 +6,7 @@ use App\Http\Resources\SurveyAnswerResource;
 use App\Http\Resources\SurveyResourceDashboard;
 use App\Models\Survey;
 use App\Models\SurveyAnswer;
+use App\Models\SurveyQuestion;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -19,6 +20,8 @@ class DashboardController extends Controller
 
         // Latest Survey
         $latest = Survey::query()->where('user_id', $user->id)->latest('created_at')->first();
+
+        $latestSurveyQuestion = SurveyQuestion::query()->where('survey_id', $latest->id)->latest('created_at')->first();
 
         // Total Number of answers
         $totalAnswers = SurveyAnswer::query()
@@ -38,7 +41,8 @@ class DashboardController extends Controller
             'totalSurveys' => $total,
             'latestSurvey' => $latest ? new SurveyResourceDashboard($latest) : null,
             'totalAnswers' => $totalAnswers,
-            'latestAnswers' => SurveyAnswerResource::collection($latestAnswers)
+            'latestAnswers' => SurveyAnswerResource::collection($latestAnswers),
+            'latestSurveyQuestion' => $latestSurveyQuestion
         ];
     }
 }

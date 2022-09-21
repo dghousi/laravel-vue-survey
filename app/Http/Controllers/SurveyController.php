@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSurveyAnswerRequest;
 use App\Http\Resources\SurveyResource;
+use App\Http\Resources\SurveyResultResource;
 use App\Models\Survey;
 use App\Http\Requests\StoreSurveyRequest;
 use App\Http\Requests\UpdateSurveyRequest;
@@ -314,5 +315,21 @@ class SurveyController extends Controller
         if (is_array($data['answer'])) {
             $data['answer'] = json_encode($data['answer']);
         }
+    }
+
+    public function getSurveyResult(Survey $survey)
+    {
+        $questionIds = $survey->questions->pluck('id');
+
+        // $answers = SurveyQuestionAnswer::whereIn('survey_question_id', $questionIds)->get();
+
+
+        $questionAnswers = SurveyQuestionAnswer::query()
+        ->join('survey_questions', 'survey_question_answers.survey_question_id', '=', 'survey_questions.id')
+        ->whereIn('survey_question_id', $questionIds)
+        ->get();
+
+        return SurveyResultResource::collection($questionAnswers);
+      
     }
 }

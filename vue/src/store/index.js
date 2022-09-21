@@ -25,7 +25,11 @@ const store = createStore({
       show: false,
       type: 'success',
       message: ''
-    }
+    },
+    currentSurveyResult: {
+      data: {},
+      loading: false,
+    },
   },
   getters: {},
   actions: {
@@ -141,6 +145,21 @@ const store = createStore({
     saveSurveyAnswer({commit}, {surveyId, answers}) {
       return axiosClient.post(`/survey/${surveyId}/answer`, {answers});
     },
+
+    getSurveyResult({ commit }, id) {
+      commit("setCurrentSurveyLoading", true);
+      return axiosClient
+        .get(`/survey/${id}/result`)
+        .then((res) => {
+          commit("setCurrentSurveyResult", res.data);
+          commit("setCurrentSurveyLoading", false);
+          return res;
+        })
+        .catch((err) => {
+          commit("setCurrentSurveyLoading", false);
+          throw err;
+        });
+    },
   },
   mutations: {
     logout: (state) => {
@@ -182,6 +201,10 @@ const store = createStore({
       setTimeout(() => {
         state.notification.show = false;
       }, 3000)
+    },
+
+    setCurrentSurveyResult: (state, data) => {
+      state.currentSurveyResult.data = data.data;
     },
   },
   modules: {},
