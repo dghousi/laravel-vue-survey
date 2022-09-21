@@ -133,6 +133,8 @@ function login(ev) {
     .catch((err) => {
       loading.value = false;
       errorMsg.value = err.response.data.error;
+
+
     });
 }
 </script>

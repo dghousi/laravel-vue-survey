@@ -55,14 +55,15 @@
           </div>
           <div class="flex justify-between">
             <TButton
-              :to="{ name: 'SurveyView', params: { id: data.latestSurvey.id } }"
+              :to="{ name: 'SurveyView', params: { id: data?.latestSurvey?.id } }"
               link
             >
               <PencilIcon class="w-5 h-5 mr-2" />
               Edit Survey
             </TButton>
 
-            <TButton link>
+            <TButton :to="{ name: 'SurveyAnswerView', params: { id: data?.latestSurvey?.id} }"
+              link>
               <EyeIcon class="w-5 h-5 mr-2" />
               View Answers
             </TButton>
@@ -86,17 +87,17 @@
           </div>
         </template>
 
-        <div v-if="data.latestAnswers.length" class="text-left">
+        <div v-if="data?.latestAnswers?.length" class="text-left">
           <a
             href="#"
-            v-for="answer of data.latestAnswers"
+            v-for="answer of data?.latestAnswers"
             :key="answer.id"
             class="block p-2 hover:bg-gray-100/90"
           >
-            <div class="font-semibold">{{ answer.survey.title }}</div>
+            <div class="font-semibold">{{ answer?.survey?.title }}</div>
             <small>
               Answer Made at:
-              <i class="font-semibold">{{ answer.end_date }}</i>
+              <i class="font-semibold">{{ answer?.end_date }}</i>
             </small>
           </a>
         </div>
